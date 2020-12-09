@@ -29,3 +29,45 @@
 将数列长度由`n`增长为`2n+1`，恒为奇数。
 在这种情况下，**每个位置可以通过 / 2 得到元素在原来序列中的位置**。
 
+
+## Problem 5. 最长回文子串
+> 给定字符串`s`，找到`s`中的最长回文子串。你可以假设`s`中的最大长度为1000。
+
+### Keys:
+* **动态规划:** 
+  + 通过记录的子问题的解来得到原问题的解。
+  + 状态转移方程。
+  + 循环顺序。
+
+**My solution:** 
+```cpp
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int maxlen = 0, begin = 0;  // 记录输出值
+        int start=0, end=0;  // 回文子串中首尾元素的下标
+        int n = s.size();
+        int i = 0;   // 下标索引
+
+        while(i < n) {
+            start=i, end=i;
+            while((i+1<n) && (s[i]==s[i+1])) {  // 找到连续相同字符
+                ++end;
+                ++i;
+            }
+            while((start-1>=0) && (end+1<n) && (s[start-1]==s[end+1])) {  // 中心发散
+                --start;
+                ++end;
+            }
+            if(end-start+1 > maxlen){  // 更新解
+                maxlen = end-start+1;
+                begin = start;
+            }
+            ++i;
+        }
+        return s.substr(begin, maxlen);
+    }
+};
+```
+
+
