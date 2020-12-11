@@ -118,3 +118,45 @@ public:
     }
 };
 ```
+
+
+## Problem 7. 整数反转
+> 给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。
+假设我们的环境只能存储32位的有符号整数，则其数值范围为$[-2^{31}, 2^{31}-1]$，
+如果反转后整数溢出那么返回0。
+
+### Notes
+* **反转的基本操作**。
+反转整数的方法可以与反转字符串进行类比。
+重复弹出`x`的最后一位数字，并将它推入到`rev`后面。
+
+* **反转时可能存在溢出问题**。
+当`rev = rev*10 + pop`时可能会导致溢出。
+假如`rev`为正数，由于`0<=pop<=9`那么(负数同理)：
+  1. 如果 $temp=rev·10 + pop$ 导致溢出，那么一定有 $rev>=INT\_MAX/10$;
+  1. 如果 $rev>INT\_MAX/10$，那么`temp`一定溢出；
+  1. 如果 $rev==INT\_MAX/10$，那么$pop>INT\_MAX-rev$时会溢出(pop>7)。
+
+* **可以使用同类型的存储位数更高的变量来判断是否溢出**。
+如本题可以令`rev`为`long`类型，在返回时判断`rev`是否大于INT\_MAX(或小于INT\_MIN)，
+即可判断是否溢出，根据要求返回即可。
+
+**My solution:**
+```cpp
+class Solution {
+public:
+    int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev > INT_MAX/10 || (rev == INT_MAX / 10 && pop > 7)) return 0;
+            if (rev < INT_MIN/10 || (rev == INT_MIN / 10 && pop < -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+};
+```
+
+
