@@ -160,3 +160,61 @@ public:
 ```
 
 
+## Problem 8. 字符串转换整数
+> 实现一个`atoi`函数，使其能够将字符串转换为整数。
+
+首先，该函数会根据需要丢弃无用的开头字符，直到寻找到第一个非空的字符为止。
+接下来的转化规则如下：
+
+* 如果第一个非空字符为正或者负号时，
+则将该符号与之后面尽可能多的连续数字字符组合起来，
+形成一个有符号整数。
+* 假如第一个非空字符是数字，
+则直接将其与之后连续的数字字符组合起来，形成一个整数。
+* 该字符串在有效的整数部分之后也可能会存在多余的字符，
+那么这些字符可以被忽略，它们对函数不应该造成影响。
+
+**注意：** 假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或
+字符串仅包含空白字符时，则你的函数不需要进行转换，即无法进行有效转换。
+在任何情况下，若函数不能进行有效的转换时，请返回 0 。
+
+### Notes
+* **涉及整数的运算需要注意溢出**。
+对于溢出的处理方式通常可以转换为`INT_MAX`的逆操作。
+
+* 确定有限状态机 (deterministic finite automaton, DFA)，也称自动机、有限状态机。
+
+* 解决字符串模拟题的常规方法：有限状态机、正则表达式。
+
+**My Solution:**
+```cpp
+class Solution {
+public:
+    int myAtoi(std::string s) {
+      long long ans = 0;
+      int n = s.size(), sym = 1;
+      bool flag = false;  // 判断是否开始转换
+
+      for (int i=0; i<n; ++i){
+        if (!flag && s[i] == ' ') continue;  // 空字符
+        else if (!flag && s[i] == '+'){   // 正号
+          flag = true;
+        }
+        else if (!flag && s[i] == '-'){   // 负号
+          sym = -1;
+          flag = true;
+        }
+        else if (s[i] >= '0' && s[i] <= '9'){  // 数字
+          flag = true;
+          if (sym-1==0 && INT32_MAX - 10*ans < s[i] - '0') return INT32_MAX;
+          if (sym+1==0 && INT32_MAX - 10*ans +1 < s[i] - '0') return INT32_MIN;
+          ans = ans*10 + s[i]-'0';
+        }
+        else break;
+      }
+
+      return ans*sym;
+    }
+};
+```
+
