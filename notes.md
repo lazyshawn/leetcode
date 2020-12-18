@@ -218,3 +218,114 @@ public:
 };
 ```
 
+
+## Problem 9. 子数组中占绝大多数的元素
+> 实现一个`MajorityChecker`的类，它具有以下几个API：
+
+* `MajorityChecker(int[] arr)` 会用给定的数组`arr`来构造一个`MajorityChecker`的实例。
+* `int query(int left, int right, int threshold)` 中有这么几个参数：
+  + `0 <= left <= right < arr.length` 表示数组`arr`的子数组的长度。
+  + `2 * threshold > right - left + 1`， 
+  也就是说阈值`threshold`始终比子序列长度的一半还要大。
+
+每次查询`query(...)`会返回`arr[left], arr[left+1], ... , arr[right]` 中
+至少出现`threshold` 次的元素，如果不存在就返回`-1`。
+
+### Notes
+* `2 * threshold > right - left + 1` 代表需要找的元素是给定数组中的众数，
+且该众数是唯一的。
+
+* 线段树是一种二叉搜索树，与区间树相似，
+它将一个区间划分成一些单元区间，每个单元区间对应线段树中的一个叶结点。
+使用线段树可以**快速的查找某一个节点在若干条线段中出现的次数**，
+时间复杂度为O(logN)。而未优化的空间复杂度为2N，
+实际应用时一般还要开4N的数组以免越界，因此有时需要离散化让空间压缩。
+
+* 只要能化成一些**连续点的修改和统计**问题，就可以用线段树来解决。
+
+* C++ 中赋值语句的返回值是所赋的值。
+
+**My solution:**
+```cpp
+// 线段树模板
+class SegmentTree {
+  int n, a[20005];
+  std::vector<int> s[20005];  // 容器数组
+
+  // 节点数据结构体
+  struct node {
+    int val, cnt;   // 节点记录的值
+
+    // 节点值的运算(线性加法)
+    node operator+ (const node& b) const {
+      node ret;
+      if (val == b.val) {
+        ret.val=val;
+        ret.cnt = cnt + b.cnt;
+      } else if (b.cnt > cnt) {
+        ret.val = b.val;
+        ret.cnt = b.cnt - cnt;
+      } else {
+        ret.val = val;
+        ret.cnt = cnt - b.cnt;
+      }
+      return ret;
+    }
+  } t[65536];  // 节点结构体数组
+
+  // 递归构造线段树(对每个节点赋值)
+  void build (int R, int l, int r) {
+    if (r==l) {
+      t[R].val = a[l];
+      t[R].cnt = 1;
+      return;  // 达到叶节点时返回
+    }
+    int mid = (r+l) >> 1;
+    build(R<<1, l, mid);      // 左子节点
+    build(R<<1|1, mid+1, r);  // 右子节点
+    t[R] = t[R<<1] + t[R<<1|1];
+  };
+
+  // 访问节点
+  node query(int R, int l, int r, int left, int right){
+    if (l==left && r==right) {
+      return t[R];
+    }
+    int mid = (l+r)>>1;
+    if (right <= mid) {
+      return query(R<<1, l, mid, left, right);
+    } else if (left > mid) {
+      return query(R<<1|1, mid+1, r, left, right);
+    } else return query(R<<1, l, mid, left, mid)
+      + query(R<<1|1, mid+1, r, mid+1, right);
+  }
+
+public:
+  SegmentTree(std::vector<int> &arr) {
+    n = arr.size();
+    int ans;
+    // 赋值语句返回所赋的值
+    // 赋值同时分别记录每个数的出现位置
+    for (int i=0; i<n; ++i) {
+      s[a[i]=arr[i]].push_back(i);
+    }
+    build(1,0,n-1);
+  }
+
+  int ask(int left, int right, int threshold) {
+    int ans = query(1, 0, n-1, left, right).val;  // 绝对众数
+    // 给定区间内数ans出现的次数
+    // upper_bound, lower_bound 需要用到头文件<algorithm>
+    if (upper_bound(s[ans].begin(), s[ans].end(), right) -
+          lower_bound(s[ans].begin(), s[ans].end(), left) <
+          threshold) ans = -1;
+    return ans;
+  }
+};
+```
+
+### Ref
+1. [线段树从零开始, 岩之痕, CSDN](
+https://blog.csdn.net/zearot/article/details/52280189)
+
+
