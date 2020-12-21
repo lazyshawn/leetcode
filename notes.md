@@ -37,7 +37,8 @@
 * **动态规划:** 
   + 通过记录的子问题的解来得到原问题的解。
   + 状态转移方程。
-  + 循环顺序。
+
+* **循环顺序**。
 
 **My solution:** 
 ```cpp
@@ -219,7 +220,7 @@ public:
 ```
 
 
-## Problem 9. 子数组中占绝大多数的元素
+## Problem 57. 子数组中占绝大多数的元素
 > 实现一个`MajorityChecker`的类，它具有以下几个API：
 
 * `MajorityChecker(int[] arr)` 会用给定的数组`arr`来构造一个`MajorityChecker`的实例。
@@ -328,4 +329,48 @@ public:
 1. [线段树从零开始, 岩之痕, CSDN](
 https://blog.csdn.net/zearot/article/details/52280189)
 
+
+## Problem 1105
+> 你把要摆放的书 books 都整理好，叠成一摞：
+从上往下，第 i 本书的厚度为 books[i][0]，高度为 books[i][1]。
+按顺序 将这些书摆放到总宽度为 shelf_width 的书架上。
+返回书架整体可能的最小高度。
+
+### Notes
+* **动态规划问题**。
+关键是理解当前问题与上一级问题的关联, 即状态转移方程。
+  + 对于任意摆放情况，如果书架高度最小，那么去掉最后一层仍然是摆放剩余书籍的最优方式。
+  因此只需要考虑最后一层的最大高度和放置剩余书籍的书架的最小高度。
+  + 记放置前$i$本书需要的最小书架高度是$dp[i]$。
+  设倒数第二层的最后一本书是第$j$本书，最后一层中最高的书高度为$h$，
+  则$dp[i] = min(dp[j]+h)$。
+
+* `for`循环中判断条件最好用循环次数，额外的退出条件写在循环内。
+即常用`for(int i=0; i<n; ++i)`而非`for(int i=0; a[i]<fn; ++i)`。
+
+**My Solution:**
+```cpp
+class Solution {
+public:
+  int minHeightShelves(std::vector<std::vector<int>>& books, int shelf_width) {
+    int n = books.size();  // 书的数量
+    std::vector<int> dp(n+1, INT32_MAX);
+    dp[0] = 0;
+
+    for (int i=1; i<n+1; ++i) { // 计算dp[i]
+      int h = 0;
+      int last_width = 0;
+      for (int j=1; j<i+1; ++j) {
+        // 最后一层书的总宽度和最大高度
+        last_width += books[i-j][0];
+        h = std::max(h, books[i-j][1]);
+        if (last_width>shelf_width) break;
+
+        dp[i] = std::min(dp[i], dp[i-j] + h);
+      }
+    }
+    return dp[n];
+  }
+};
+```
 
