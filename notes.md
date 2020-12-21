@@ -374,3 +374,34 @@ public:
 };
 ```
 
+## Problem 1103
+> 排排坐，分糖果。
+我们买了一些糖果 `candies`，打算把它们分给排好队的 `n = num_people` 个小朋友。
+给第一个小朋友 1 颗糖果，第二个小朋友 2 颗，依此类推，
+直到给最后一个小朋友 n 颗糖果，再回到队伍起点，给第一个小朋友n+1颗。
+返回一个长度为 `num_people`、元素之和为 `candies` 的数组，
+以表示糖果的最终分发情况（即 `ans[i]` 表示第 `i` 个小朋友分到的糖果数）。
+
+### Notes
+* 圆周循环可以用求模运算记录，即用`i%n`表示第`i`次循环对应的元素索引。
+* 求最值运算`min/max`有时可以代替`if`判断。
+
+**My Solution:**
+```cpp
+class Solution {
+public:
+  std::vector<int> distributeCandies(int candies, int num_people) {
+    std::vector<int> ans(num_people);
+    int i = 0, tmp = 0;  // 循环次数，分配糖果数
+    while(candies>0) {
+      tmp = std::min(candies, i+1);
+      ans[i%num_people] += tmp;
+      candies -= tmp;
+      ++i;
+    }
+    return ans;
+  }
+};
+```
+
+
