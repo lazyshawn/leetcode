@@ -405,3 +405,37 @@ public:
 ```
 
 
+## Problem 434. Number of Segments in a String
+> 字符串中的单词数。
+统计字符串中的单词个数，这里单词指的是连续的非空格字符。
+
+### Notes
+* **Bool flag与零值比较。** Bool 值不直接与`true, false, 0, 1`进行比较，
+直接用`if(flag)`或`if(!flag)`判断。
+
+* **字符串的遍历。** `s[i]`
+
+**My Solution:**
+```cpp
+class Solution {
+public:
+  int countSegments(std::string s){
+    int cnt = 0;
+    bool space = true;  // 记录上一个字符是否为空格
+
+    for (int i=0; i<s.size(); ++i) {
+      if (s[i]!=' ' && space){  // 空格后的字符非空格
+        space = false;
+        ++cnt;
+      }
+      if (s[i]==' '){
+        space = true;
+      }
+    }
+
+    return cnt;
+  }
+};
+```
+
+
