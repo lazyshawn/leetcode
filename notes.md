@@ -1,5 +1,72 @@
 [toc]
 
+## § 线段树
+* 线段树是一种二叉搜索树，与区间树相似，
+它将一个区间划分成一些单元区间，每个单元区间对应线段树中的一个叶结点。
+使用线段树可以**快速的查找某一个节点在若干条线段中出现的次数**，
+时间复杂度为O(logN)。而未优化的空间复杂度为2N，
+实际应用时一般还要开4N的数组以免越界，因此有时需要离散化让空间压缩。
+
+* 只要能化成一些**连续点的修改和统计**问题，就可以用线段树来解决。
+
+### 线段树的常见应用
+* **区间内的绝对众数**。
+Problem 57. 子数组中占绝大多数的元素。
+
+
+### 线段树模板伪代码
+```cpp
+/* 节点数据结构体 */
+struct node {
+  typename val, cnt;   // 节点记录的值
+
+  /* 节点的运算(线性加法) */
+  node operator+ (const node& b) const {
+    node ret;
+    更新ret.val;
+    更新ret.cnt;
+    return ret;
+  }
+} t[65536];  // 节点结构体数组
+
+/* 递归构造线段树 (对每个节点赋值) */
+// R: 节点序号; l: 数组左端点索引; r:数组右端点索引;
+void build (int R, int l, int r) {
+  // 处理叶节点时
+  if (r==l) {
+    t[R].val = a[l];
+    t[R].cnt = 1;
+    return;
+  }
+  // 一般节点
+  int mid = (r+l) >> 1;
+  build(R<<1, l, mid);      // 左子节点
+  build(R<<1|1, mid+1, r);  // 右子节点
+  t[R] = t[R<<1] + t[R<<1|1];
+};
+
+/* 访问节点 (递归查找) */
+// left: 查询区间的左端点索引; right: 查询区间的右端点索引;
+node query(int R, int l, int r, int left, int right){
+  // 匹配到区间左右端点
+  if (l==left && r==right) {
+    return t[R];
+  }
+  // 查询区间在子树中
+  int mid = (l+r)>>1;
+  if (right <= mid) {
+    return query(R<<1, l, mid, left, right);
+  } else if (left > mid) {
+    return query(R<<1|1, mid+1, r, left, right);
+  } else return query(R<<1, l, mid, left, mid)
+    + query(R<<1|1, mid+1, r, mid+1, right);
+}
+```
+
+
+##$\star$ 单调栈
+
+
 ## Problem 3. 无重复字符的最长子串
 > 给定一个字符串，请你找出其中不含有重复字符的最长子串的长度。
 
