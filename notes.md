@@ -64,11 +64,11 @@ node query(int R, int l, int r, int left, int right){
 ```
 
 
-## § 单调栈
+## § 单调栈/队列
 * **单调栈** 即单调递增或递减的栈。
 这一数据结构本身并没有很重要的作用，
-但是构建单调栈的算法可以快速地求出
-数组中某元素一侧**大于(或小于)该数的第一个元素**。
+但是构建单调栈的算法可以快速地解决
+**连续区间内的极值** 问题**。
 
 * 构建单调栈的算法的核心思想是:
 对于第 `j0`, `j1` 个元素满足`j0 < j1 < i`, `a[j0] > a[j1]`，
@@ -83,6 +83,9 @@ node query(int R, int l, int r, int left, int right){
 * 在遍历数组构建单调栈的同时可以使用一个新的数组
 记录原数组中每个元素之前小于其值的第一个元素的位置。
 
+* 为了可以同时弹出队首和队尾的元素，我们需要使用双端队列。
+满足单调性的双端队列一般称作 `「单调队列」` 。
+
 
 ### 单调栈的常见应用
 * **左右两侧最近的高度小于h[i]的柱子** 。
@@ -92,17 +95,21 @@ node query(int R, int l, int r, int left, int right){
 ### 单调栈模板伪代码
 ```cpp
 /* 单调递增栈 */
-std::stack<int> mono_stack;
+std::stack<int> mono_stack;  // 单调栈
+std::deque<int> deque;  // 单调队列
+
 // 从左到右遍历数组
 for (int i=0; i<n; ++i) {
   // 当前值小于栈顶元素则弹栈
   while(!mono_stack.empty() && heights[i]<=heights[mono_stack.top()]){
     mono_stack.pop();
   }
-  // 记录第i个值左侧第一个较小值的索引
+  /* 操作1: 记录第i个值左侧第一个较小值的索引 */
   left[i] = mono_stack.empty() ? -1 : mono_stack.top();
   // 当前值大于栈顶元素则堆栈, 记录当前元素索引
   mono_stack.push(i);
+  /* 操作2 */
+  foo;
 }
 ```
 
