@@ -18,6 +18,7 @@ Notes	Problem 0435 Non-overlapping Intervals.md	/^### Notes$/;"	S
 Notes	Problem 0455 Assign Cookies.md	/^### Notes$/;"	S
 Notes	Problem 0509 Fibonacci Number.md	/^### Notes$/;"	S
 Notes	Problem 0605 Can Place Flowers.md	/^### Notes$/;"	S
+Notes	Problem 0830 Positions of Large Groups.md	/^### Notes$/;"	S
 Notes	Problem 1014 Best Sightseeing Pair.md	/^### Notes$/;"	S
 Notes	Problem 1046 Last Stone Weight.md	/^### Notes$/;"	S
 Notes	Problem 1386 Cinema Seat Allocation.md	/^### Notes$/;"	S
@@ -48,6 +49,7 @@ What is this	README.md	/^## What is this$/;"	s
 § Problem 435 Non-overlapping Intervals	Problem 0435 Non-overlapping Intervals.md	/^## § Problem 435 Non-overlapping Intervals$/;"	s
 § Problem 509 Fibonacci Number	Problem 0509 Fibonacci Number.md	/^## § Problem 509 Fibonacci Number$/;"	s
 § Problem 605 Can Place Flowers	Problem 0605 Can Place Flowers.md	/^## § Problem 605 Can Place Flowers$/;"	s
+§ Problem 830 Positions of Large Groups	Problem 0830 Positions of Large Groups.md	/^## § Problem 830 Positions of Large Groups$/;"	s
 § Problem 86 Partition List	Problem 0086 Partition List.md	/^## § Problem 86 Partition List$/;"	s
 § 动态规划	notes.md	/^## § 动态规划$/;"	s
 § 单调栈/队列	notes.md	/^## § 单调栈\/队列$/;"	s
