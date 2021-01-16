@@ -156,6 +156,29 @@ https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/)
 把待查询的两个变量表示的结点指向他们的根节点。
 
 
+### 并查集模板
+```cpp
+class Solution {
+public:
+  /* *** 查询 *** */
+  // 查找结点的根节点, 同时进行路径压缩
+  // 可同时维护边边的权值
+  int find(std::vector<int>& parents, int i) {
+    if (parents[i] == i) {
+      return i;
+    } else {
+      parents[i] = find(parents, parents[i]);
+      return parents[i];
+    }
+  }
+
+  /* *** 合并 *** */
+  // 连接两节点的根节点
+  void unify(std::vector<int>& parents, int i, int j) {
+    parents[find(parents,i)] = find(parents,j);
+  }
+```
+
 ## Problem 3. 无重复字符的最长子串
 > 给定一个字符串，请你找出其中不含有重复字符的最长子串的长度。
 
