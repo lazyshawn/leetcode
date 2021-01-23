@@ -179,6 +179,12 @@ public:
   }
 ```
 
+### 并查集的常见应用
+* **连通分量个数** 。
+  + [1319. 连通网络的操作次数](
+https://leetcode-cn.com/problems/number-of-operations-to-make-network-connected/)
+
+
 ## Problem 3. 无重复字符的最长子串
 > 给定一个字符串，请你找出其中不含有重复字符的最长子串的长度。
 
